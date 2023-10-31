@@ -8,13 +8,13 @@ In each meeting, you are required to discuss:
 4. Deviations and changes to the project plan, if any
 
 
-# Meeting dd.mm.2021 HH::MM
+# Meeting dd.mm.2023 HH::MM
 
 **Participants**: 
-1. Member 1
-2. Member 2
-3. Member 3
-4. Member 4 
+1. Antti Tiusanen
+2. Nia Lehtonen
+3. Aleksanteri Pitkenin
+4. Håvard Kalliainen
 
 ## Summary of works
 1. Member 1 

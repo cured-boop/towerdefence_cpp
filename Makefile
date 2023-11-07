@@ -1,11 +1,20 @@
-# Variables for include and library directories
-SFML_INCLUDE = libs/SFML/include
-SFML_LIB = libs/SFML/lib
+CXX = g++
+CXXFLAGS = -Wall -Wextra -std=c++11 $(shell pkg-config --cflags sfml-all)
+LDFLAGS = $(shell pkg-config --libs sfml-all)
 
-all: compile link
+SRC = $(wildcard src/*.cpp)
+OBJ = $(SRC:.cpp=.o)
+EXEC = main
 
-compile:
-	g++ -I$(SFML_INCLUDE) -Isrc/include -c main.cpp
+all: $(EXEC)
 
-link:
-	g++ main.o -o main -L$(SFML_LIB) -lsfml-graphics -lsfml-window -lsfml-system
+$(EXEC): $(OBJ)
+	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJ) $(EXEC)
+
+.PHONY: all clean

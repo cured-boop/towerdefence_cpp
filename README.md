@@ -46,6 +46,19 @@ preferably at a regular weekly time. In the meeting the group updates:
 > Everyone may not be able to participate to all meetings, but at least a couple of members should be present in each meeting. 
 > Regular absence from meetings will affect in individual evaluation.
 
+
+# Setup and Running Instructions
+If you prefer to install libraries manually, make sure to install:
+1. pkg-config
+2. SFML
+
+Otherwise, follow these instructions:
+1. Open terminal in the root directory (tower-defence-tran-duong-6)
+2. Run './setup.sh' (This will install all the needed dependencies automatically)
+3. Run 'make' (This will compile the project)
+4. Run './main' (This will run the program)
+
+
 # Source code documentation
 It is strongly recommended to use Doxygen to document your source code.
 Please go over the *Project Guidelines* for details.

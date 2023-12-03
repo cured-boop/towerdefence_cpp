@@ -1,8 +1,10 @@
+#include "Constants.hpp"
 #include "Game.hpp"
 #include <SFML/Graphics.hpp>
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(800, 700), "Tower Defense Game");
+  sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
+                          "Tower Defense Game");
 
   sf::Font font;
   if (!font.loadFromFile("src/assets/arial.ttf")) {
@@ -51,12 +53,7 @@ int main() {
   Game game = Game(window);
 
   while (window.isOpen() && gameStarted) {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
-        window.close();
-    }
-    game.update(); // Game "tick"
+    game.update(); // Game "tick", handles events internally
     window.clear();
     game.draw(); // Make game stuff appear on the screen
     window.display();

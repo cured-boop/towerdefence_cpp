@@ -1,11 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "Enemy.hpp" // Include your Enemy class header
 #include "Level.hpp" // Include your Level class header
 //#include "State.hpp" // Include your State class header
-//#include "Tower.hpp" // Include your Tower class header
-#include "Wave.hpp" // Include your Wave class header
+#include "Sidebar.hpp"
 #include <SFML/Graphics.hpp>
 
 class Game {
@@ -13,6 +11,8 @@ public:
   Game(sf::RenderWindow &window);
   void update();
   void draw();
+  void handleMouseClick(int x, int y);
+  bool isValidPosition(int x, int y);
 
 private:
   sf::RenderWindow &window;
@@ -23,11 +23,15 @@ private:
   // std::vector<Tower> towers;
   // Wave currentWave; // Current wave of enemies
 
-  void handleEvents(); // Handle game-specific events
+  void handleEvents(const sf::Event &event); // Handle game-specific events
   void updateEnemies(float deltaTime);
   // void updateTowers();
   void checkCollisions();
   sf::Clock gameClock;
+  Sidebar sidebar;
+  int selectedTower;
+  sf::Sprite enemySprite;
+  sf::Texture enemyTexture;
 };
 
 #endif // GAME_HPP

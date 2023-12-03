@@ -4,10 +4,8 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
-extern const int width;
-extern const int height;
-extern const double tileWidth;
-extern const double tileHeight;
-extern const double tileSize;
+extern const int windowWidth;
+extern const int windowHeight;
+extern const int tileSize;
 
 #endif // CONSTANTS_HPP

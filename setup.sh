@@ -3,11 +3,13 @@
 # Function to install SFML on Mac
 install_sfml_mac() {
     brew install sfml
+    brew install nlohmann-json
 }
 
 # Function to install SFML on Debian/Ubuntu
 install_sfml_debian() {
     sudo apt-get update && sudo apt-get install libsfml-dev
+    sudo apt-get install nlohmann-json3-dev
     # Install pkg-config if it is not installed
     if ! command -v pkg-config &> /dev/null; then
         echo "pkg-config not found. Installing pkg-config..."
@@ -16,10 +18,10 @@ install_sfml_debian() {
 }
 
 # Check for Operating System
-OS="`uname`"
+OS="$(uname)"
 case $OS in
   'Linux')
-    # Assuming the use of Debian/Ubuntu via WSL, install SFML and pkg-config
+    # Assuming the use of Debian/Ubuntu, install SFML, nlohmann/json, and pkg-config
     install_sfml_debian
     ;;
   'Darwin') 
@@ -33,7 +35,7 @@ case $OS in
         echo "pkg-config not found. Installing pkg-config..."
         brew install pkg-config
     fi
-    # Install SFML on Mac
+    # Install SFML and nlohmann/json on Mac
     install_sfml_mac
     ;;
   *)

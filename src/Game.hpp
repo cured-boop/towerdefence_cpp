@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include "Enemy.hpp" // Include your Enemy class header
 #include "Level.hpp" // Include your Level class header
@@ -24,9 +24,10 @@ private:
   // Wave currentWave; // Current wave of enemies
 
   void handleEvents(); // Handle game-specific events
-  // void updateEnemies();
+  void updateEnemies(float deltaTime);
   // void updateTowers();
   void checkCollisions();
+  sf::Clock gameClock;
 };
 
-#endif // GAME_H
+#endif // GAME_HPP

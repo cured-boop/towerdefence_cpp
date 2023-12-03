@@ -1,24 +1,22 @@
 // Referenced in Game. Needs to be implemented. Represents a wave of enemies.
+#ifndef WAVE_HPP
+#define WAVE_HPP
+
 #include "Enemy.hpp"
-#include <map>
 #include <vector>
 class Wave {
 public:
-  int goldReward;
-  int index;
+  Wave(std::vector<Enemy> enemylist);
 
-  Wave(int goldReward, int index = 1);
+  const std::vector<Enemy> getEnemies();
 
-  int number();
-
-  std::vector<Enemy> enemies();
-
-  void next();
-
-  void load(int wave);
-
-  int reward();
+  Enemy getNextEnemy();
 
 private:
-  std::map<int, int> waves;
+  std::vector<Enemy> enemies;
+
+  // void next();
+
+  // void load(int wave);
 };
+#endif

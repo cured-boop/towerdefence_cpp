@@ -47,6 +47,7 @@ int main() {
   }
 
   // Initialize the game
+  // TODO: Load the last state from a file
   Game game = Game(window);
 
   while (window.isOpen() && gameStarted) {
@@ -54,10 +55,8 @@ int main() {
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed)
         window.close();
-
-      game.update(); // Game "tick"
     }
-
+    game.update(); // Game "tick"
     window.clear();
     game.draw(); // Make game stuff appear on the screen
     window.display();

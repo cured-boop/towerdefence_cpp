@@ -1,4 +1,5 @@
-//reference in Game. Needs to be implemented. Handles I/O and state management. 
+/*//reference in Game. Needs to be implemented. Handles I/O and state
+management.
 //required to instal (nlohmann/json) @ nlohmann/json GitHub repository
 #ifndef SAVERLOADER_HPP
 #define SAVERLOADER_HPP
@@ -18,4 +19,4 @@ private:
     Game* game;
 };
 
-#endif // SAVERLOADER_HPP
+#endif // SAVERLOADER_HPP*/

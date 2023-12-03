@@ -51,10 +51,12 @@ preferably at a regular weekly time. In the meeting the group updates:
 If you prefer to install libraries manually, make sure to install:
 1. pkg-config
 2. SFML
+3. nlohmann
 
 Otherwise, follow these instructions:
 1. Open terminal in the root directory (tower-defence-tran-duong-6)
 2. Run './setup.sh' (This will install all the needed dependencies automatically)
+    If you lack permission to run it, execute this first: chmod +x setup.sh
 3. Run 'make' (This will compile the project)
 4. Run './main' (This will run the program)
 

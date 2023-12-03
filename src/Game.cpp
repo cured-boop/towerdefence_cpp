@@ -1,88 +1,60 @@
-/*
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <cmath>
-#include "Pos.hpp"
-#include "Constants.hpp"
-#include "SaverLoader.hpp"
-#include "Tower.hpp"
-#include "Enemy.hpp"
-#include "State.hpp"
-#include "Wave.hpp"
-#include "Level.hpp"
+#include "Game.hpp"
 
-class Game {
-private:
-    SaverLoader reader;
-    // Declare other member variables as needed
+std::vector<std::vector<int>> layout = {
+    {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 1, 1, 0},
+    {0, 0, 0, 0, 0, 1, 0}, {0, 1, 1, 1, 1, 1, 0}, {0, 1, 0, 0, 0, 0, 0},
+    {0, 1, 0, 0, 0, 0, 0}};
 
-public:
-    Game() {
-        // Implement the constructor
-    }
-
-    std::tuple<int, int, int, int, std::vector<Json::Value>, std::vector<std::vector<int>>> loadConfig() {
-        // Implement the loadConfig method
-    }
-
-    bool loadGame() {
-        try {
-            Json::Value JSON = reader.load();
-            overall.loadStatus(JSON);
-            wave.load(JSON["wave"].asInt());
-            std::vector<Json::Value> towerList = JSON["towers"].asVector();
-            towersBuffer.clear();
-            for (const auto& tower : towerList) {
-                std::string Type = tower["type"].asString();
-                std::map<std::string, int> posMap;
-                for (const auto& entry : tower["pos"].getMemberNames()) {
-                    posMap[entry] = tower["pos"][entry].asInt();
-                }
-
-                Tower* newTower = nullptr;
-                if (Type == "1") newTower = towers.wrap(1, new Pos(posMap["x"], posMap["y"])); //no functionality for this right now
-                else if (Type == "2") newTower = towers.wrap(2, new Pos(posMap["x"], posMap["y"]));
-                else if (Type == "3") newTower = towers.wrap(3, new Pos(posMap["x"], posMap["y"]));
-                else if (Type == "4") newTower = towers.wrap(4, new Pos(posMap["x"], posMap["y"]));
-                else if (Type == "5") newTower = towers.wrap(5, new Pos(posMap["x"], posMap["y"]));
-
-                if (newTower) {
-                    towersBuffer.push_back(newTower);
-                }
-            }
-
-            std::cout << "Towers loaded" << std::endl;
-            return true;
-        } catch (const std::exception& e) {
-            std::cerr << e.what() << std::endl;
-            return false;
-        }
-    }
-
-    void onTick() {
-        // Implement the onTick method
-    }
-
-    void save() {
-        reader.save();
-    }
-
-    void start() {
-        enemiesBuffer = wave.enemies();
-        engage();
-        std::cout << "Start Game" << std::endl;
-    }
-
-    // Implement other methods as needed
-};
-
-// Implement the remaining methods as necessary
-
-int main() {
-    // Implement the main function if needed
-    return 0;
+Game::Game(sf::RenderWindow &win)
+    : window(win), level(Level(layout, 1000, 1000)) {
+  // Initialize game components, like loading the level, initializing the state,
+  // etc. level = ... state = ... currentWave = ...
 }
 
-*/
+void Game::update() {
+  handleEvents();
+  // updateEnemies();
+  // updateTowers();
+  checkCollisions();
+  // Any other update logic (e.g., check game over, update state)
+}
+
+void Game::draw() {
+  // Draw level
+  level.draw(window);
+
+  // Draw each enemy
+  for (auto &enemy : enemies) {
+    // enemy.draw(window);
+  }
+
+  // Draw each tower
+  /*for (auto &tower : towers) {
+     tower.draw(window);
+  }*/
+
+  // Draw other game elements (e.g., UI, state)
+}
+
+void Game::handleEvents() {
+  // Handle specific game events here (e.g., spawning enemies, managing waves)
+}
+
+/*void Game::updateEnemies() {
+  for (auto &enemy : enemies) {
+    // enemy.update();
+    // Additional logic (e.g., remove enemy if it reaches the end)
+  }
+}*/
+
+/*void Game::updateTowers() {
+  for (auto &tower : towers) {
+    // tower.update();
+    // Additional logic (e.g., tower attacking enemies)
+  }
+}*/
+
+void Game::checkCollisions() {
+  // Check for collisions between tower projectiles and enemies
+  // Implement collision logic
+}

@@ -1,24 +1,24 @@
-//Referenced in Game. Needs to be implemented. Represents a wave of enemies. 
+// Referenced in Game. Needs to be implemented. Represents a wave of enemies.
+#include "Enemy.hpp"
 #include <map>
 #include <vector>
-#include "Enemy.hpp"
 class Wave {
 public:
-    int goldReward;
-    int index;
+  int goldReward;
+  int index;
 
-    Wave(int goldReward, int index = 1);
+  Wave(int goldReward, int index = 1);
 
-    int number();
+  int number();
 
-    std::vector<Enemy> enemies();
+  std::vector<Enemy> enemies();
 
-    void next();
+  void next();
 
-    void load(int wave);
+  void load(int wave);
 
-    int reward();
+  int reward();
 
 private:
-    std::map<int, int> waves;
+  std::map<int, int> waves;
 };

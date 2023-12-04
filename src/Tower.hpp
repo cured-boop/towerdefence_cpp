@@ -1,32 +1,31 @@
-/*#ifndef TOWER_HPP
+#ifndef TOWER_HPP
 #define TOWER_HPP
 
 #include "Enemy.hpp"
-#include "Game.hpp"
-#include "Pos.hpp"
 #include <vector>
-
-class noTarget; // Forward declaration to break circular dependency
 
 class Tower {
 public:
   int dmg;
   int range;
   int cost;
-  std::string Type;
-  Pos pos;
-  Game *game;
+  int delay;
+  sf::Vector2f position;
 
-  Tower(int dmg, int range, int cost, std::string Type, Pos pos, Game *game);
+  Tower(int dmg, int range, int cost, sf::Vector2f position);
 
   std::vector<Enemy> withinRange(std::vector<Enemy> &enemies);
 
-  void attack(int time);
+  void attack(std::vector<Enemy> &enemies);
+
+  void draw(sf::RenderWindow &window);
 
 private:
-  bool cooldown(int time);
+  sf::Clock cooldownClock;
+  sf::Texture texture;
+  sf::Sprite sprite;
 };
-
+/*
 class mainInfo {
 public:
   int dmg;
@@ -45,5 +44,5 @@ public:
 
   std::optional<Tower> wrap(int Type, Pos pos = Pos(0, 0));
 };
-
-#endif // TOWER_HPP*/
+*/
+#endif // TOWER_HPP

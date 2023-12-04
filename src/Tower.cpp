@@ -4,43 +4,63 @@
 #include <cmath>
 #include <iostream>
 
-Tower::Tower(int _dmg, int _range, int _cost, sf::Vector2f _position)
-    : dmg(_dmg), range(_range), cost(_cost), position(_position) {
+Tower::Tower(int _dmg, int _range, int _cost, int _delay)
+    : dmg(_dmg), range(_range), cost(_cost), delay(_delay) {
 
   // Load textures
-  if (!texture.loadFromFile("src/assets/cat.png")) {
+  if (!towerTexture.loadFromFile("src/assets/cat.png")) {
+    // Handle error
+  }
+  if (!attackTexture.loadFromFile("src/assets/claw.png")) {
     // Handle error
   }
 
   // Set textures to sprites
-  sprite.setTexture(texture);
+  towerSprite.setTexture(towerTexture);
+  attackSprite.setTexture(attackTexture);
 
-  // Calculate scale factors
-  float scaleX = static_cast<float>(tileSize) / texture.getSize().x;
-  float scaleY = static_cast<float>(tileSize) / texture.getSize().y;
-  sprite.setScale(scaleX, scaleY);
-  sprite.setPosition(position.x, position.y);
+  scaleSprite(towerSprite, towerTexture);
+  scaleSprite(attackSprite, attackTexture);
 }
 
-void Tower::draw(sf::RenderWindow &window) { window.draw(sprite); }
+void Tower::setPosition(sf::Vector2i newPosition) {
+  position.x = newPosition.x * tileSize + tileSize / 2;
+  position.y = newPosition.y * tileSize + tileSize / 2;
+}
 
-std::vector<Enemy> Tower::withinRange(std::vector<Enemy> &enemies) {
-  std::vector<Enemy> result;
-  for (auto &enemy : enemies) {
-    double distance = std::sqrt(std::pow(enemy.position.x - position.x, 2) +
-                                std::pow(enemy.position.y - position.y, 2));
-    if (distance < range) {
-      result.push_back(enemy);
+void Tower::draw(sf::RenderWindow &window) {
+  towerSprite.setPosition(position.x - tileSize / 2, position.y - tileSize / 2);
+  window.draw(towerSprite);
+  if (cooldownClock.getElapsedTime().asSeconds() < delay / 2) {
+    if (target) {
+      attackSprite.setPosition(target->position);
+      window.draw(attackSprite);
+    }
+  } else
+    target = nullptr;
+}
+
+std::vector<std::list<Enemy>::iterator>
+Tower::withinRange(std::list<Enemy> &enemies) {
+  std::vector<std::list<Enemy>::iterator> result;
+  for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+    double distance = std::sqrt(std::pow(it->position.x - position.x, 2) +
+                                std::pow(it->position.y - position.y, 2));
+    if (distance < range && it->hp > 0) {
+      result.push_back(it);
     }
   }
   return result;
 }
 
-void Tower::attack(std::vector<Enemy> &enemies) {
+void Tower::attack(std::list<Enemy> &enemies) {
   if (cooldownClock.getElapsedTime().asSeconds() >= delay) {
     auto enemiesInRange = withinRange(enemies);
     if (!enemiesInRange.empty()) {
-      enemiesInRange.front().getHit(dmg);
+      std::cout << "Attacking" << std::endl;
+      (*enemiesInRange.front())
+          .getHit(dmg); // Dereference iterator to modify actual enemy
+      target = &(*enemiesInRange.front());
       cooldownClock.restart();
     }
   }

@@ -5,8 +5,9 @@
 #include <cmath>
 #include <iostream>
 
-Enemy::Enemy(const std::vector<sf::Vector2i> &path, double _speed, int _hp)
-    : speed(_speed), hp(_hp), currentPathIndex(0) {
+Enemy::Enemy(const std::vector<sf::Vector2i> &path, double _speed, int _hp,
+             int _money)
+    : speed(_speed), hp(_hp), currentPathIndex(0), money(_money) {
   position.x = tileSize * path.front().x;
   position.y = tileSize * path.front().y;
 
@@ -17,14 +18,15 @@ Enemy::Enemy(const std::vector<sf::Vector2i> &path, double _speed, int _hp)
 
   // Set textures to sprites
   enemySprite.setTexture(enemyTexture);
-
-  // Calculate scale factors
-  float enemyScaleX = static_cast<float>(tileSize) / enemyTexture.getSize().x;
-  float enemyScaleY = static_cast<float>(tileSize) / enemyTexture.getSize().y;
-  enemySprite.setScale(enemyScaleX, enemyScaleY);
+  scaleSprite(enemySprite, enemyTexture);
 }
 
 void Enemy::setPosition(sf::Vector2f newPosition) { position = newPosition; }
+
+void Enemy::die() { // Start death "animation" / delay
+  deathClock.restart();
+  dying = true;
+}
 
 void Enemy::draw(sf::RenderWindow &window) {
   enemySprite.setPosition(position.x, position.y);
@@ -32,7 +34,12 @@ void Enemy::draw(sf::RenderWindow &window) {
 }
 
 void Enemy::move(float deltaTime) {
-  if (currentPathIndex >= path.size() - 1)
+  // Don't move if dead
+  if (dying && deathClock.getElapsedTime().asSeconds() > 1) {
+    isDead = true;
+    return;
+  }
+  if (dying || currentPathIndex >= path.size() - 1)
     return; // Check if the enemy has reached the end of the path
   // Next target position in world coordinates
   sf::Vector2f targetPosition(path[currentPathIndex + 1].x * tileSize,
@@ -56,4 +63,10 @@ void Enemy::move(float deltaTime) {
 
 void Enemy::setPath(std::vector<sf::Vector2i> _path) { path = _path; }
 
-void Enemy::getHit(int dmg) { hp -= dmg; }
+void Enemy::getHit(int dmg) {
+  std::cout << "HP: " << hp << " dmg: " << dmg << std::endl;
+  hp -= dmg;
+  std::cout << "HP now: " << hp << std::endl;
+  if (hp <= 0)
+    die();
+}

@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm> // For std::find
 #include <iostream>  // For testing, you can remove this in production code
+#include <list>
 #include <vector>
 
 class Level {
@@ -19,7 +20,7 @@ public:
   std::vector<Wave> getWaves();
   int getLevelNum();
 
-  std::vector<Enemy> enemies;
+  std::list<Enemy> enemies;
   std::vector<Tower> towers;
 
   bool hasEnemies();
@@ -29,6 +30,10 @@ public:
   std::vector<sf::Vector2i> path;
 
   bool spawn;
+
+  sf::Vector2i calculateTile(float x, float y);
+
+  bool isEmpty(sf::Vector2i tile);
 
 private:
   // Matrix representation of the level, where 0 = grass, 1 = road, 2 = start,

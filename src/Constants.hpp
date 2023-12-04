@@ -3,9 +3,11 @@
 // can be changed are located in a single file.
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
+#include <SFML/Graphics.hpp>
 
 extern const int windowWidth;
 extern const int windowHeight;
 extern const int tileSize;
+extern void scaleSprite(sf::Sprite &sprite, const sf::Texture &texture);
 
 #endif // CONSTANTS_HPP

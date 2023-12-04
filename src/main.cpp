@@ -6,6 +6,8 @@ int main() {
   sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
                           "Tower Defense Game");
 
+  window.setPosition(sf::Vector2i(800, 200));
+
   sf::Font font;
   if (!font.loadFromFile("src/assets/arial.ttf")) {
     // Handle error
@@ -50,7 +52,8 @@ int main() {
 
   // Initialize the game
   // TODO: Load the last state from a file
-  Game game = Game(window);
+  State state = State(1, 0, 1);
+  Game game = Game(window, state);
 
   while (window.isOpen() && gameStarted) {
     game.update(); // Game "tick", handles events internally

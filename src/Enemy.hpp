@@ -10,27 +10,34 @@ public:
   sf::Vector2f position;
   int hp;
 
-  Enemy(const std::vector<sf::Vector2i> &path, double speed = 50.0,
-        int hp = 100);
+  Enemy(const std::vector<sf::Vector2i> &path, double speed = 50.0, int hp = 30,
+        int money = 5);
 
   void move(float deltaTime);
 
-  int currentPathIndex;
+  size_t currentPathIndex;
 
   void getHit(int dmg);
 
   void setPosition(sf::Vector2f);
 
-  void draw(sf::RenderWindow &window); // Uses tileSize and pos to calculate the
-                                       // location on screen
+  void draw(sf::RenderWindow &window);
 
   std::vector<sf::Vector2i> path;
 
   void setPath(std::vector<sf::Vector2i> path);
 
+  void die();
+
+  bool isDead;
+
+  int money;
+
 private:
   sf::Texture enemyTexture;
   sf::Sprite enemySprite;
+  sf::Clock deathClock; // Adds a delay before dying
+  bool dying;
 };
 
 #endif

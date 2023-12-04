@@ -1,17 +1,39 @@
-/*#include "State.hpp"
-#include "Tower.hpp" // Include necessary header file for Tower class
+#include "State.hpp"
+#include "Constants.hpp"
+#include <iostream>
 
-State::State(int hp, int gold) : hp(hp), gold(gold) {}
+State::State(int _currentWave, int _gold, int _wavesTotal)
+    : currentWave(_currentWave), gold(_gold), wavesTotal(_wavesTotal) {
 
-void State::damage() { hp -= 1; }
+  if (!font.loadFromFile("src/assets/arial.ttf")) {
+    // Handle error
+  }
 
-void State::bought(const Tower &tower) { gold -= tower.cost; }
+  moneyText.setFont(font);
+  moneyText.setCharacterSize(20);
+  moneyText.setPosition(windowWidth - 140, windowHeight - 40);
+  moneyText.setStyle(sf::Text::Bold);
+  moneyText.setFillColor(sf::Color(255, 106, 168));
 
-bool State::buyable(const Tower &tower) const { return gold >= tower.cost; }
+  waveText.setFont(font);
+  waveText.setCharacterSize(20);
+  waveText.setPosition(windowWidth - 140, windowHeight - 90);
+  waveText.setStyle(sf::Text::Bold);
+  waveText.setFillColor(sf::Color(255, 106, 168));
+}
 
-bool State::isOver() const { return hp > 0; }
+int State::money() { return gold; }
 
-void State::money(int amount) { gold += amount; }
+bool State::isFinished() { return currentWave > wavesTotal; }
+
+void State::addMoney(int amount) { gold += amount; }
+
+void State::draw(sf::RenderWindow &window) {
+  moneyText.setString("Money: " + std::to_string(gold));
+  waveText.setString("Wave: " + std::to_string(currentWave));
+  window.draw(moneyText);
+  window.draw(waveText);
+}
 /*
 void State::loadStatus(const Json::Value& json) {
     gold = json["gold"].asInt();

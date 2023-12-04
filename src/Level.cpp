@@ -4,8 +4,8 @@
 
 Level::Level(const std::vector<std::vector<int>> _layout, int _levelNum,
              std::vector<Wave> _waves, std::vector<sf::Vector2i> _path)
-    : layout(_layout), levelNum(_levelNum), waves(_waves), path(_path),
-      spawn(true) { // Level constructor
+    : path(_path), spawn(true), layout(_layout), waves(_waves),
+      levelNum(_levelNum) { // Level constructor
 
   // Load textures
   if (!grassTexture.loadFromFile("src/assets/grass.png")) {
@@ -18,15 +18,8 @@ Level::Level(const std::vector<std::vector<int>> _layout, int _levelNum,
   // Set textures to sprites
   grassSprite.setTexture(grassTexture);
   roadSprite.setTexture(roadTexture);
-
-  // Calculate scale factors
-  float grassScaleX = static_cast<float>(tileSize) / grassTexture.getSize().x;
-  float grassScaleY = static_cast<float>(tileSize) / grassTexture.getSize().y;
-  grassSprite.setScale(grassScaleX, grassScaleY);
-
-  float roadScaleX = static_cast<float>(tileSize) / roadTexture.getSize().x;
-  float roadScaleY = static_cast<float>(tileSize) / roadTexture.getSize().y;
-  roadSprite.setScale(roadScaleX, roadScaleY);
+  scaleSprite(grassSprite, grassTexture);
+  scaleSprite(roadSprite, roadTexture);
 } // Level constructor
 
 const std::vector<std::vector<int>> &Level::getLayout() const { return layout; }
@@ -36,8 +29,8 @@ std::vector<Wave> Level::getWaves() { return waves; }
 bool Level::hasEnemies() { return (enemies.size() != 0); }
 
 void Level::draw(sf::RenderWindow &window) {
-  for (int y = 0; y < layout.size(); y++) {
-    for (int x = 0; x < layout[y].size(); x++) {
+  for (size_t y = 0; y < layout.size(); y++) {
+    for (size_t x = 0; x < layout[y].size(); x++) {
       if (layout[y][x] == 0) {
         grassSprite.setPosition(x * tileSize, y * tileSize);
         window.draw(grassSprite);
@@ -49,8 +42,30 @@ void Level::draw(sf::RenderWindow &window) {
   }
 }
 
+sf::Vector2i Level::calculateTile(float x, float y) {
+  int gridSize = layout.front().size();
+  // Assuming tileSize is the size of each tile in pixels
+  int tileX = x / tileSize;
+  int tileY = y / tileSize;
+
+  // Make sure the calculated tile indices are within the bounds of the grid
+  tileX = std::max(0, std::min(tileX, gridSize));
+  tileY = std::max(0, std::min(tileY, gridSize));
+
+  return sf::Vector2i(tileX, tileY);
+}
+
+bool Level::isEmpty(sf::Vector2i tile) {
+  // First checks if 'tile' is not on road, then:
+  // Checks all Towers in the vector<Tower> towers for their tile and returns
+  // true if no towers are occupying 'tile'
+  if (layout[tile.y][tile.x] != 0)
+    return false;
+  return true;
+}
+
 void Level::spawnNextWave() {
-  if (!spawn) // Wave is in progress, do not spawn more
+  if (!spawn || waves.empty()) // Do not spawn more if wave in progress or empty
     return;
 
   if (spawnClock.getElapsedTime().asSeconds() >= 3.0f) {

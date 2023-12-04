@@ -2,6 +2,7 @@
 #define TOWER_HPP
 
 #include "Enemy.hpp"
+#include <list>
 #include <vector>
 
 class Tower {
@@ -10,20 +11,26 @@ public:
   int range;
   int cost;
   int delay;
-  sf::Vector2f position;
+  sf::Vector2i position;
 
-  Tower(int dmg, int range, int cost, sf::Vector2f position);
+  Tower(int dmg, int range, int cost, int delay);
 
-  std::vector<Enemy> withinRange(std::vector<Enemy> &enemies);
+  std::vector<std::list<Enemy>::iterator>
+  withinRange(std::list<Enemy> &enemies);
 
-  void attack(std::vector<Enemy> &enemies);
+  void attack(std::list<Enemy> &enemies);
 
   void draw(sf::RenderWindow &window);
 
+  void setPosition(sf::Vector2i);
+
 private:
   sf::Clock cooldownClock;
-  sf::Texture texture;
-  sf::Sprite sprite;
+  sf::Texture towerTexture;
+  sf::Texture attackTexture;
+  sf::Sprite towerSprite;
+  sf::Sprite attackSprite;
+  Enemy *target;
 };
 /*
 class mainInfo {

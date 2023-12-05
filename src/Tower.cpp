@@ -8,7 +8,7 @@ Tower::Tower(int _dmg, int _range, int _cost, int _delay)
     : dmg(_dmg), range(_range), cost(_cost), delay(_delay) {
 
   // Load textures
-  if (!towerTexture.loadFromFile("src/assets/cat.png")) {
+  if (!towerTexture.loadFromFile("src/assets/cat0.png")) {
     // Handle error
   }
   if (!attackTexture.loadFromFile("src/assets/claw.png")) {

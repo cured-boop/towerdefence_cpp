@@ -8,7 +8,8 @@ class Sidebar {
 public:
   Sidebar(float width, const sf::RenderWindow &window);
   void draw(sf::RenderWindow &window);
-  int getSelectedTower(); // Returns the selected tower or nullptr if none
+  int selectTower(int money,
+                  sf::Vector2f position); // Returns the id of the tower or 0
   float getWidth();
 
 private:
@@ -17,7 +18,8 @@ private:
   std::vector<sf::Texture> towerTextures; // Textures for the available towers
   std::vector<sf::Sprite> towerSprites;   // Sprites for the available towers
   int selectedTower;                      // Currently selected tower
-  // Additional UI elements, like buttons or icons
+  std::vector<sf::Text> towerPricesTexts; // Vector to store price texts
+  sf::Font font;                          // Font for rendering text
 };
 
 #endif // SIDEBAR_HPP

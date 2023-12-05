@@ -6,6 +6,9 @@ const int windowWidth = 900;
 const int windowHeight = 700;
 const int tileSize = 100;
 
+const std::vector<int> towerPrices = {15, 30, 45};
+const std::vector<int> towerRanges = {150, 300, 450};
+
 void scaleSprite(sf::Sprite &sprite, const sf::Texture &texture) {
 
   // Calculate scale factors

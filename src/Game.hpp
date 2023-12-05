@@ -21,6 +21,9 @@ private:
   void updateEnemies(float deltaTime);
   void updateTowers();
   sf::Clock gameClock;
+  sf::Texture cursorTexture;
+  sf::Sprite cursorSprite;
+  sf::CircleShape rangeIndicator;
   Sidebar sidebar;
   int selectedTower;
   State state;

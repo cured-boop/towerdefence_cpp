@@ -20,7 +20,7 @@ std::vector<Wave> waves = {Wave({enemy}), Wave({enemy, enemy}),
 
 Level _level = Level(layout, 1, waves, path);
 
-Tower tower = Tower(10, 1000, 10, 2);
+Tower tower = Tower(10, 150, 10, 2);
 
 Game::Game(sf::RenderWindow &win, State _state)
     : window(win), sidebar(200, window), state(_state), level(_level) {
@@ -59,12 +59,25 @@ void Game::draw() {
   }
 
   state.draw(window);
+
+  if (selectedTower >= 0) {
+    window.draw(rangeIndicator); // Draw the range indicator
+    window.draw(cursorSprite);   // Draw the cursor sprite
+  }
 }
 
 void Game::handleEvents(const sf::Event &event) {
 
   if (event.type == sf::Event::Closed) {
     window.close();
+  }
+
+  if (selectedTower >= 0) {
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+    cursorSprite.setPosition(mousePosition.x - tileSize / 2,
+                             mousePosition.y - tileSize / 2);
+    rangeIndicator.setPosition(
+        mousePosition.x, mousePosition.y); // Update range indicator position
   }
 
   if (event.type == sf::Event::MouseButtonPressed) {
@@ -100,11 +113,23 @@ void Game::handleMouseClick(int x, int y) {
   if (x >= window.getSize().x - sidebar.getWidth()) {
     std::cout << "The click was within sidebar" << std::endl;
     // Handle sidebar interaction
-    selectedTower = sidebar.getSelectedTower();
-    if (selectedTower) {
-      // Do something with the selected tower
-      // TODO: Replace cursor with tower's sprite and disable the ability to buy
-      // more
+    selectedTower = sidebar.selectTower(state.money(), sf::Vector2f(x, y));
+    if (selectedTower >= 0) {
+      std::string texturePath =
+          "src/assets/cat" + std::to_string(selectedTower) + ".png";
+      if (!cursorTexture.loadFromFile(texturePath)) {
+        // Handle error (e.g., texture file not found)
+      }
+      cursorSprite.setTexture(cursorTexture);
+      scaleSprite(cursorSprite, cursorTexture); // Scale it to the correct size
+
+      // Initialize the range indicator
+      rangeIndicator.setRadius(towerRanges[selectedTower]);
+      rangeIndicator.setFillColor(
+          sf::Color(255, 255, 255, 128)); // Half-transparent white
+      rangeIndicator.setOrigin(
+          rangeIndicator.getRadius(),
+          rangeIndicator.getRadius()); // Set origin to the center of the circle
     }
   } else {
     // Handle map interaction
@@ -112,13 +137,15 @@ void Game::handleMouseClick(int x, int y) {
     std::cout << "Checking if the click was on a valid position (and tower is "
                  "selected)"
               << std::endl;
-    if (selectedTower && isValidPosition(x, y)) {
+    if (selectedTower >= 0 && isValidPosition(x, y)) {
       // Place the tower on the map
       std::cout << "Placing the tower" << std::endl;
       tower.setPosition(level.calculateTile(x, y));
       level.towers.push_back(tower);
+      // Pay for the tower
+      state.addMoney(-towerPrices[selectedTower]);
       // Reset selected tower
-      selectedTower = 0;
+      selectedTower = -1;
     }
   }
 }

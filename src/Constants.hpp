@@ -8,6 +8,8 @@
 extern const int windowWidth;
 extern const int windowHeight;
 extern const int tileSize;
+extern const std::vector<int> towerPrices;
+extern const std::vector<int> towerRanges;
 extern void scaleSprite(sf::Sprite &sprite, const sf::Texture &texture);
 
 #endif // CONSTANTS_HPP

@@ -30,7 +30,8 @@ void State::addMoney(int amount) { gold += amount; }
 
 void State::draw(sf::RenderWindow &window) {
   moneyText.setString("Money: " + std::to_string(gold));
-  waveText.setString("Wave: " + std::to_string(currentWave));
+  waveText.setString("Wave: " + std::to_string(currentWave) + "/" +
+                     std::to_string(wavesTotal));
   window.draw(moneyText);
   window.draw(waveText);
 }

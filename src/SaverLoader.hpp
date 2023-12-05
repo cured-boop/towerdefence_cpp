@@ -1,11 +1,10 @@
-/*//reference in Game. Needs to be implemented. Handles I/O and state
-management.
-//required to instal (nlohmann/json) @ nlohmann/json GitHub repository
 #ifndef SAVERLOADER_HPP
 #define SAVERLOADER_HPP
 
 #include "Game.hpp" // Include necessary header for Game class
-// TODO #include <json.hpp>  Include the nlohmann/json library
+#include "json.hpp" 
+
+using namespace nlohmann;
 
 class SaverLoader {
 public:

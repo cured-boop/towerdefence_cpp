@@ -14,9 +14,5 @@ public:
 
 private:
   std::vector<Enemy> enemies;
-
-  // void next();
-
-  // void load(int wave);
 };
 #endif

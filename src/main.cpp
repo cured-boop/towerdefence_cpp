@@ -52,7 +52,7 @@ int main() {
 
   // Initialize the game
   // TODO: Load the last state from a file
-  State state = State(1, 15, 3);
+  State state = State(1, 30, 3);
   Game game = Game(window, state);
 
   while (window.isOpen() && gameStarted) {

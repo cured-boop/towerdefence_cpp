@@ -7,7 +7,8 @@
 
 Enemy::Enemy(const std::vector<sf::Vector2i> &path, double _speed, int _hp,
              int _money)
-    : speed(_speed), hp(_hp), currentPathIndex(0), money(_money) {
+    : speed(_speed), hp(_hp), currentPathIndex(0), money(_money),
+      speedModifier(1) {
   position.x = tileSize * path.front().x;
   position.y = tileSize * path.front().y;
 
@@ -23,6 +24,11 @@ Enemy::Enemy(const std::vector<sf::Vector2i> &path, double _speed, int _hp,
 
 void Enemy::setPosition(sf::Vector2f newPosition) { position = newPosition; }
 
+void Enemy::slow() {
+  slowClock.restart();
+  speedModifier = 0.5;
+}
+
 void Enemy::die() { // Start death "animation" / delay
   deathClock.restart();
   dying = true;
@@ -34,6 +40,8 @@ void Enemy::draw(sf::RenderWindow &window) {
 }
 
 void Enemy::move(float deltaTime) {
+  if (slowClock.getElapsedTime().asSeconds() > 3)
+    speedModifier = 1;
   // Don't move if dead
   if (dying && deathClock.getElapsedTime().asSeconds() > 1) {
     isDead = true;
@@ -51,8 +59,8 @@ void Enemy::move(float deltaTime) {
   if (length != 0)
     direction /= length; // Normalize the direction vector
   // Move the enemy
-  position.x += direction.x * speed * deltaTime;
-  position.y += direction.y * speed * deltaTime;
+  position.x += direction.x * speed * speedModifier * deltaTime;
+  position.y += direction.y * speed * speedModifier * deltaTime;
 
   // Check if the enemy has reached the target position
   if (std::abs(position.x - targetPosition.x) < 0.1f &&

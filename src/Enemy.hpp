@@ -31,13 +31,17 @@ public:
 
   bool isDead;
 
+  void slow();
+
   int money;
 
 private:
   sf::Texture enemyTexture;
   sf::Sprite enemySprite;
   sf::Clock deathClock; // Adds a delay before dying
+  sf::Clock slowClock;
   bool dying;
+  float speedModifier;
 };
 
 #endif

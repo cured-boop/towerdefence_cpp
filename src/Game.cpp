@@ -15,8 +15,12 @@ const std::vector<sf::Vector2i> path = {
 
 Enemy enemy = Enemy(path);
 
-std::vector<Wave> waves = {Wave({enemy}), Wave({enemy, enemy}),
-                           Wave({enemy, enemy, enemy})};
+Enemy enemy2 = Enemy(path, 100.0, 20, 10);
+
+Enemy enemy3 = Enemy(path, 150.0, 20, 10);
+
+std::vector<Wave> waves = {Wave({enemy}), Wave({enemy, enemy2}),
+                           Wave({enemy, enemy2, enemy})};
 
 Level _level = Level(layout, 1, waves, path);
 

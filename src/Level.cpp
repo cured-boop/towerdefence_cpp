@@ -61,6 +61,14 @@ bool Level::isEmpty(sf::Vector2i tile) {
   // true if no towers are occupying 'tile'
   if (layout[tile.y][tile.x] != 0)
     return false;
+  for (auto tower : towers) {
+    sf::Vector2i towerTile = calculateTile(tower.position.x, tower.position.y);
+    std::cout << towerTile.x << " = " << tile.x << ", " << towerTile.y << " = "
+              << tile.y << std::endl;
+    if (tile == towerTile)
+      return false;
+  }
+
   return true;
 }
 

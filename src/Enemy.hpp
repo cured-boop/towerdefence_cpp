@@ -10,8 +10,9 @@ public:
   sf::Vector2f position;
   int hp;
 
-  Enemy(const std::vector<sf::Vector2i> &path, double speed = 50.0, int hp = 30,
-        int money = 5);
+  Enemy(int type);
+
+  void initialize(std::vector<sf::Vector2i> path);
 
   void move(float deltaTime);
 
@@ -19,7 +20,11 @@ public:
 
   void getHit(int dmg);
 
-  void setPosition(sf::Vector2f);
+  int type;
+
+  float distanceToNextTile;
+
+  bool finished;
 
   void draw(sf::RenderWindow &window);
 

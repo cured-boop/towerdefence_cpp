@@ -11,7 +11,7 @@ public:
   int range;
   int cost;
   int delay;
-  sf::Vector2i position;
+  sf::Vector2f position;
 
   Tower(int dmg, int range, int cost, int delay);
 

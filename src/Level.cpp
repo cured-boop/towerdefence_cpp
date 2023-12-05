@@ -1,31 +1,43 @@
 #include "Level.hpp"
 #include "Constants.hpp"
 #include "Wave.hpp"
+#include <cstdlib> // for rand() and srand()
+#include <ctime>   // for time()
 
-Level::Level(const std::vector<std::vector<int>> _layout, int _levelNum,
-             std::vector<Wave> _waves, std::vector<sf::Vector2i> _path)
-    : path(_path), spawn(true), layout(_layout), waves(_waves),
-      levelNum(_levelNum) { // Level constructor
-
+Level::Level() {
   // Load textures
   if (!grassTexture.loadFromFile("src/assets/grass.png")) {
-    // Handle error
   }
   if (!roadTexture.loadFromFile("src/assets/road.png")) {
-    // Handle error
+  }
+  if (!rock0Texture.loadFromFile("src/assets/rock0.png")) {
+  }
+  if (!rock1Texture.loadFromFile("src/assets/rock1.png")) {
+  }
+  if (!rock2Texture.loadFromFile("src/assets/rock2.png")) {
+  }
+  if (!rock3Texture.loadFromFile("src/assets/rock3.png")) {
   }
 
   // Set textures to sprites
   grassSprite.setTexture(grassTexture);
   roadSprite.setTexture(roadTexture);
-  scaleSprite(grassSprite, grassTexture);
-  scaleSprite(roadSprite, roadTexture);
+  rock0Sprite.setTexture(rock0Texture);
+  rock1Sprite.setTexture(rock1Texture);
+  rock2Sprite.setTexture(rock2Texture);
+  rock3Sprite.setTexture(rock3Texture);
+  scaleSprite(grassSprite);
+  scaleSprite(roadSprite);
+  scaleSprite(rock0Sprite);
+  scaleSprite(rock1Sprite);
+  scaleSprite(rock2Sprite);
+  scaleSprite(rock3Sprite);
 } // Level constructor
 
 const std::vector<std::vector<int>> &Level::getLayout() const { return layout; }
 
-int Level::getLevelNum() { return levelNum; }
 std::vector<Wave> Level::getWaves() { return waves; }
+
 bool Level::hasEnemies() { return (enemies.size() != 0); }
 
 void Level::draw(sf::RenderWindow &window) {
@@ -34,12 +46,28 @@ void Level::draw(sf::RenderWindow &window) {
       if (layout[y][x] == 0) {
         grassSprite.setPosition(x * tileSize, y * tileSize);
         window.draw(grassSprite);
-      } else if (layout[y][x] == 1 || layout[y][x] == 2 || layout[y][x] == 3) {
+      } else if (layout[y][x] == 1) {
         roadSprite.setPosition(x * tileSize, y * tileSize);
         window.draw(roadSprite);
+      } else if (layout[y][x] == 2) {
+        grassSprite.setPosition(x * tileSize, y * tileSize);
+        window.draw(grassSprite);
+        rock0Sprite.setPosition(x * tileSize, y * tileSize);
+        window.draw(rock0Sprite);
       }
     }
   }
+}
+
+void Level::initialize(std::vector<std::vector<int>> _layout,
+                       std::vector<sf::Vector2i> _path,
+                       std::vector<Wave> _waves,
+                       std::vector<Tower> purchasedTowers) {
+  layout = _layout;
+  path = _path;
+  waves = _waves;
+  towers = purchasedTowers;
+  enemies.clear();
 }
 
 sf::Vector2i Level::calculateTile(float x, float y) {
@@ -63,8 +91,6 @@ bool Level::isEmpty(sf::Vector2i tile) {
     return false;
   for (auto tower : towers) {
     sf::Vector2i towerTile = calculateTile(tower.position.x, tower.position.y);
-    std::cout << towerTile.x << " = " << tile.x << ", " << towerTile.y << " = "
-              << tile.y << std::endl;
     if (tile == towerTile)
       return false;
   }
@@ -73,23 +99,31 @@ bool Level::isEmpty(sf::Vector2i tile) {
 }
 
 void Level::spawnNextWave() {
-  if (!spawn || waves.empty()) // Do not spawn more if wave in progress or empty
+  if (waves.empty())
     return;
+  // Erase the current empty wave from the wave vector
+  std::cout << "Erasing empty wave" << std::endl;
+  waves.erase(waves.begin()); // Remove the wave if all enemies are spawned
+}
+
+void Level::update(State &state) {
+  if (waves.empty()) // Do not spawn if all waves have been spawned
+    return;
+
+  if (waves.front().getEnemies().empty() && enemies.empty()) {
+    state.nextWave();
+    spawnNextWave();
+  }
 
   if (spawnClock.getElapsedTime().asSeconds() >= 3.0f) {
     // If there are still enemies remaining in the wave
-    std::cout << "Size of wave: " << waves.front().getEnemies().size()
-              << std::endl;
     if (waves.front().getEnemies().size() != 0) {
-      std::cout << "Spawned one enemy" << std::endl;
       Enemy enemy = waves.front().getNextEnemy();
-      enemy.setPath(path);
+      enemy.initialize(path);
+      std::cout << "Spawned one enemy at " << enemy.position.x << ", "
+                << enemy.position.y << std::endl;
       enemies.push_back(enemy); // Add the enemy to the active enemies list
       spawnClock.restart();     // Restart the clock for the next enemy
-    } else {
-      std::cout << "Ereasing empty wave" << std::endl;
-      waves.erase(waves.begin()); // Remove the wave if all enemies are spawned
-      spawn = false;              // Spawning complete
     }
   }
 }

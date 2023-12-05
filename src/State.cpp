@@ -2,36 +2,46 @@
 #include "Constants.hpp"
 #include <iostream>
 
-State::State(int _currentWave, int _gold, int _wavesTotal)
-    : currentWave(_currentWave), gold(_gold), wavesTotal(_wavesTotal) {
+State::State() {
 
-  if (!font.loadFromFile("src/assets/arial.ttf")) {
+  if (!font.loadFromFile("src/assets/bubblegum.ttf")) {
     // Handle error
   }
 
   moneyText.setFont(font);
-  moneyText.setCharacterSize(20);
-  moneyText.setPosition(windowWidth - 140, windowHeight - 40);
+  moneyText.setCharacterSize(30);
   moneyText.setStyle(sf::Text::Bold);
-  moneyText.setFillColor(sf::Color(255, 106, 168));
+  moneyText.setPosition(windowWidth - 180, windowHeight - 40);
+  moneyText.setStyle(sf::Text::Bold);
+  moneyText.setFillColor(sf::Color(19, 21, 54));
 
   waveText.setFont(font);
-  waveText.setCharacterSize(20);
-  waveText.setPosition(windowWidth - 140, windowHeight - 90);
+  waveText.setCharacterSize(30);
+  moneyText.setStyle(sf::Text::Bold);
+  waveText.setPosition(windowWidth - 180, windowHeight - 90);
   waveText.setStyle(sf::Text::Bold);
-  waveText.setFillColor(sf::Color(255, 106, 168));
+  waveText.setFillColor(sf::Color(19, 21, 54));
+}
+
+void State::initialize(int _currentWave, int _gold, int _wavesTotal) {
+  currentWave = _currentWave;
+  gold = _gold;
+  wavesTotal = _wavesTotal;
 }
 
 int State::money() { return gold; }
 
 bool State::isFinished() { return currentWave > wavesTotal; }
 
+void State::nextWave() { currentWave++; }
+
 void State::addMoney(int amount) { gold += amount; }
 
 void State::draw(sf::RenderWindow &window) {
   moneyText.setString("Money: " + std::to_string(gold));
-  waveText.setString("Wave: " + std::to_string(currentWave) + "/" +
-                     std::to_string(wavesTotal));
+  waveText.setString(
+      "Wave: " + std::to_string(std::min(currentWave, wavesTotal)) + "/" +
+      std::to_string(wavesTotal));
   window.draw(moneyText);
   window.draw(waveText);
 }

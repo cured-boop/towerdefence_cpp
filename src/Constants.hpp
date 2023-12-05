@@ -7,9 +7,17 @@
 
 extern const int windowWidth;
 extern const int windowHeight;
+extern const int menuHeight;
 extern const int tileSize;
+extern const int tileSizeOffset;
 extern const std::vector<int> towerPrices;
 extern const std::vector<int> towerRanges;
-extern void scaleSprite(sf::Sprite &sprite, const sf::Texture &texture);
+extern const std::vector<int> enemyHPs;
+extern const std::vector<int> enemySpeeds;
+extern const std::vector<int> enemyMoneys;
+extern void scaleSprite(sf::Sprite &sprite);
+extern void centerSprite(sf::Sprite &sprite);
+extern sf::Vector2f tileToPosition(sf::Vector2i);
+extern sf::Vector2f tileToPosition(int x, int y);
 
 #endif // CONSTANTS_HPP

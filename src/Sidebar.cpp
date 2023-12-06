@@ -14,14 +14,15 @@ Sidebar::Sidebar(float width, const sf::RenderWindow &window)
     towerTextures.push_back(texture);
     sf::Sprite sprite;
     sprite.setTexture(towerTextures.back());
-    sprite.setPosition(windowWidth - width / 2 - tileSize / 2, 10);
-    scaleSprite(sprite, texture);
+    sprite.setPosition(windowWidth - width / 2, tileSize);
+    scaleSprite(sprite);
+    centerSprite(sprite);
     towerSprites.push_back(sprite);
   }
-  // Repeat the above block for each tower type
+  // TODO: Repeat the above block for each tower type
 
   // Load font
-  if (!font.loadFromFile("src/assets/arial.ttf")) {
+  if (!font.loadFromFile("src/assets/fredoka.ttf")) {
     // Handle error
   }
 
@@ -29,7 +30,7 @@ Sidebar::Sidebar(float width, const sf::RenderWindow &window)
     sf::Text priceText;
     priceText.setFont(font);
     priceText.setString("Price: " + std::to_string(towerPrices[i]));
-    priceText.setCharacterSize(25);         // Set character size
+    priceText.setCharacterSize(30);         // Set character size
     priceText.setFillColor(sf::Color::Red); // Set text color
 
     // Position the text below the corresponding tower sprite

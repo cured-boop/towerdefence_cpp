@@ -19,20 +19,21 @@ Tower::Tower(int _dmg, int _range, int _cost, int _delay)
   towerSprite.setTexture(towerTexture);
   attackSprite.setTexture(attackTexture);
 
-  scaleSprite(towerSprite, towerTexture);
-  scaleSprite(attackSprite, attackTexture);
+  scaleSprite(towerSprite);
+  scaleSprite(attackSprite);
+  centerSprite(towerSprite);
+  centerSprite(attackSprite);
 }
 
 void Tower::setPosition(sf::Vector2i newPosition) {
-  position.x = newPosition.x * tileSize + tileSize / 2;
-  position.y = newPosition.y * tileSize + tileSize / 2;
+  position = tileToPosition(newPosition);
 }
 
 void Tower::draw(sf::RenderWindow &window) {
-  towerSprite.setPosition(position.x - tileSize / 2, position.y - tileSize / 2);
+  towerSprite.setPosition(position.x, position.y);
   window.draw(towerSprite);
   if (cooldownClock.getElapsedTime().asSeconds() < delay / 2) {
-    if (target) {
+    if (target && !target->isDead) {
       attackSprite.setPosition(target->position);
       window.draw(attackSprite);
     }
@@ -43,6 +44,8 @@ void Tower::draw(sf::RenderWindow &window) {
 std::vector<std::list<Enemy>::iterator>
 Tower::withinRange(std::list<Enemy> &enemies) {
   std::vector<std::list<Enemy>::iterator> result;
+
+  // Find enemies within range
   for (auto it = enemies.begin(); it != enemies.end(); ++it) {
     double distance = std::sqrt(std::pow(it->position.x - position.x, 2) +
                                 std::pow(it->position.y - position.y, 2));
@@ -50,6 +53,20 @@ Tower::withinRange(std::list<Enemy> &enemies) {
       result.push_back(it);
     }
   }
+
+  // Sort the enemies by their distance to the last path tile
+  std::sort(
+      result.begin(), result.end(),
+      [](const std::list<Enemy>::iterator &a,
+         const std::list<Enemy>::iterator &b) {
+        if (a->currentPathIndex != b->currentPathIndex) {
+          return a->currentPathIndex >
+                 b->currentPathIndex; // Descending order of currentPathIndex
+        }
+        return a->distanceToNextTile >
+               b->distanceToNextTile; // Descending order of distanceToNextTile
+      });
+
   return result;
 }
 

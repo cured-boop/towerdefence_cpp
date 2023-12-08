@@ -1,8 +1,41 @@
 #include "Constants.hpp"
 #include "Game.hpp"
+#include "SaverLoader.hpp"
 #include <SFML/Graphics.hpp>
 
+using json = nlohmann::json;
+
 int main() {
+
+  SaverLoader game_state = SaverLoader();
+  
+  // Call the loadConfig function to load the configuration into a JSON object
+  json config = game_state.loadConfig();
+
+  // Access the values from the loaded configuration
+  int gold = config["gold"];
+  int hp = config["hp"];
+  int reward = config["reward"];
+  int pledge = config["pledge"];
+
+  // Access the towers array
+  json towers = config["towers"];
+
+  // Access the levels array
+  json levels = config["levels"];
+
+  // Output some values for demonstration
+  std::cout << "Gold: " << gold << std::endl;
+  std::cout << "HP: " << hp << std::endl;
+  std::cout << "Reward: " << reward << std::endl;    
+  std::cout << "Pledge: " << pledge << std::endl;
+
+  // Output the towers array    
+  std::cout << "Towers: " << towers.dump(2) << std::endl;
+
+  // Output the first level array
+  std::cout << "First Level: " << levels[0].dump(2) << std::endl;
+
 
   sf::Texture backgroundTexture;
   if (!backgroundTexture.loadFromFile("src/assets/menubg.png")) {

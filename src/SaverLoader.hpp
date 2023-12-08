@@ -8,7 +8,7 @@ using namespace nlohmann;
 
 class SaverLoader {
 public:
-    SaverLoader(Game* game);
+    SaverLoader();
 
     void save();
     nlohmann::json load();

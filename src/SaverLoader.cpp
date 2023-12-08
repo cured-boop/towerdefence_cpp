@@ -1,12 +1,12 @@
-/* #include "SaverLoader.hpp"
+#include "SaverLoader.hpp"
 #include "Tower.hpp" // Include necessary header for Tower class
 
 #include <fstream>
 #include <iostream>
 
-SaverLoader::SaverLoader(Game* game) : game(game) {}
+SaverLoader::SaverLoader() {}
 
-void SaverLoader::save() {
+/*void SaverLoader::save() {
     nlohmann::json JSON = {
         {"wave", game->getWaveIndex()},
         {"gold", game->getOverall()->getGold()},
@@ -29,7 +29,7 @@ void SaverLoader::save() {
 
     std::ofstream file("save_state.json");
     file << JSON.dump(2);
-}
+} 
 
 nlohmann::json SaverLoader::load() {
     std::cout << "Load game" << std::endl;
@@ -38,7 +38,7 @@ nlohmann::json SaverLoader::load() {
     file >> JSON;
     std::cout << JSON.dump(2) << std::endl;
     return JSON;
-}
+} */
 
 nlohmann::json SaverLoader::loadConfig() {
     try {
@@ -52,4 +52,5 @@ nlohmann::json SaverLoader::loadConfig() {
         std::cerr << "Error with configuration: " << e.what() << std::endl;
         return nlohmann::json();
     }
-} */
+} 
+

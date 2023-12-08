@@ -1,12 +1,25 @@
 #include "Game.hpp"
 #include "Constants.hpp"
+#include "SaverLoader.hpp"
 #include <algorithm>
 #include <iostream>
 
-const std::vector<std::vector<int>> layout = {
-    {0, 0, 0, 1, 2, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 2, 0, 0, 1, 0}, {0, 1, 1, 1, 1, 1, 0}, {0, 1, 0, 0, 0, 0, 0},
-    {0, 1, 0, 0, 0, 0, 0}};
+using json = nlohmann::json;
+
+// Define game state
+SaverLoader gameState = SaverLoader();
+  
+// Call the loadConfig function to load the configuration into a JSON object
+json config = gameState.loadConfig();
+
+// Access the dara arrays
+json levels = config["levels"];
+json paths = config["paths"];
+json towers = config["towers"];
+// Output the levels array
+//std::cout << "Levels:" << std::endl;
+
+const std::vector<std::vector<int>> layout = levels[0];
 
 const std::vector<sf::Vector2i> path = {
     {1, 7}, {1, 6}, {1, 5}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {5, 4},
@@ -18,10 +31,11 @@ Enemy enemy1 = Enemy(1);
 
 Enemy enemy2 = Enemy(2);
 
+
 std::vector<Wave> waves = {Wave({enemy0, enemy1, enemy2}), Wave({enemy1}),
                            Wave({enemy1})};
-
-Tower tower = Tower(10, 150, 10, 2);
+auto tower1 = towers[0];
+Tower tower = Tower(tower1["damage"], tower1["range"], tower1["cost"], tower1["delay"]);
 
 std::vector<Tower> purchasedTowers;
 

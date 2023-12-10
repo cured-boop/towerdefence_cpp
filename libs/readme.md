@@ -1,3 +1,40 @@
+
+### README.md
+
+#### LIBS Directory
+
+//TODO: Make sure includes refer to this directory and move libs here.
+
+This directory is intended for all external libraries that your project depends on.
+
+#### List of External Libs
+
+- **SFML (Simple and Fast Multimedia Library):** Used for windowing, graphics, GUI, etc.
+- **JSON for Modern C++ (nlohmann/json):** Used for JSON parsing and serialization.
+
+
+#### How to Add Libraries
+
+1. **SFML:**
+   - **Option 1: Git Submodule**:
+     ```bash
+     git submodule add https://github.com/SFML/SFML.git libs/SFML
+     ```
+   - **Option 2: Direct Download:**
+     - Download SFML from [SFML Download](https://www.sfml-dev.org/download.php).
+     - Extract and place it in the `libs/SFML` directory.
+
+2. **JSON for Modern C++:**
+   - **Option 1: Git Submodule:**
+     ```bash
+     git submodule add https://github.com/nlohmann/json.git libs/json
+     ```
+   - **Option 2: Direct Download:**
+     - Download from [JSON for Modern C++ GitHub](https://github.com/nlohmann/json/releases).
+     - Extract and place it in the `libs/json` directory.
+
+# Original course description below
+
 # LIBS directory
 In this directory, you are required to place all the external libraries your project depends on. 
 Although, in principle, you can use git submodules (and place them under this directory), 

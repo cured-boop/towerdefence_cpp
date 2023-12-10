@@ -1,9 +1,8 @@
-
 ### README.md
 
 #### LIBS Directory
 
-//TODO: Make sure includes refer to this directory and move libs here.
+<span style="color: red;">This text will be redTODO: Make sure includes refer to this directory and move libs here.</span>
 
 This directory is intended for all external libraries that your project depends on.
 

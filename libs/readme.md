@@ -2,7 +2,7 @@
 
 #### LIBS Directory
 
-<span style="color: red;">This text will be redTODO: Make sure includes refer to this directory and move libs here.</span>
+*TODO: Make sure includes refer to this directory and move libs here.*
 
 This directory is intended for all external libraries that your project depends on.
 
@@ -34,6 +34,7 @@ This directory is intended for all external libraries that your project depends 
 
 # Original course description below
 
+~~
 # LIBS directory
 In this directory, you are required to place all the external libraries your project depends on. 
 Although, in principle, you can use git submodules (and place them under this directory), 
@@ -52,4 +53,4 @@ large dependencies, such as QT.
 > If you are using already compiled library, place it in this folder, and set the linker options appropriately.
 > The inlcude files of the dependent library should also be placed in this folder.
 
-
+~~

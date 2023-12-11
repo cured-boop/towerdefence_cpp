@@ -1,0 +1,5 @@
+/*
+During development phase print commands were used to check the behaviour
+of loading configuration from a file. During runtime the loaded 
+parts from the file worked appropriately. 
+*/

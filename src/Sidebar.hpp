@@ -1,25 +1,28 @@
 #ifndef SIDEBAR_HPP
 #define SIDEBAR_HPP
 
-#include "Tower.hpp" // Include your Tower class
+#include "Tower.hpp"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 class Sidebar {
 public:
   Sidebar(float width, const sf::RenderWindow &window);
   void draw(sf::RenderWindow &window);
-  int selectTower(int money,
-                  sf::Vector2f position); // Returns the id of the tower or 0
+  int selectTower(int money, sf::Vector2f position);
   float getWidth();
 
 private:
-  float width;                            // Width of the sidebar
-  sf::RectangleShape background;          // Background of the sidebar
-  std::vector<sf::Texture> towerTextures; // Textures for the available towers
-  std::vector<sf::Sprite> towerSprites;   // Sprites for the available towers
-  int selectedTower;                      // Currently selected tower
-  std::vector<sf::Text> towerPricesTexts; // Vector to store price texts
-  sf::Font font;                          // Font for rendering text
+  float width;
+  sf::RectangleShape background;
+
+  sf::Texture textureCat0, textureCat1, textureCat2;
+  sf::Sprite spriteCat0, spriteCat1, spriteCat2;
+  std::vector<sf::Sprite> towerSprites;
+
+  int selectedTower;
+  std::vector<sf::Text> towerPricesTexts;
+  sf::Font font;
 };
 
 #endif // SIDEBAR_HPP

@@ -4,14 +4,20 @@
 #include <cmath>
 #include <iostream>
 
-Tower::Tower(int _dmg, int _range, int _cost, int _delay)
-    : dmg(_dmg), range(_range), cost(_cost), delay(_delay) {
+Tower::Tower(int _dmg, int _range, int _cost, int _delay, int _type)
+    : dmg(_dmg), range(_range), cost(_cost), delay(_delay), type(_type) {
 
   // Load textures
-  if (!towerTexture.loadFromFile("src/assets/cat0.png")) {
-    // Handle error
+  std::string texturePath = "src/assets/cat" + std::to_string(_type) + ".png";
+  if (!towerTexture.loadFromFile(texturePath)) {
+    // Handle error (e.g., texture file not found)
   }
-  if (!attackTexture.loadFromFile("src/assets/claw.png")) {
+
+  if (type != 1) {
+    if (!attackTexture.loadFromFile("src/assets/claw.png")) {
+      // Handle error
+    }
+  } else if (!attackTexture.loadFromFile("src/assets/hairball.png")) {
     // Handle error
   }
 
@@ -32,13 +38,33 @@ void Tower::setPosition(sf::Vector2i newPosition) {
 void Tower::draw(sf::RenderWindow &window) {
   towerSprite.setPosition(position.x, position.y);
   window.draw(towerSprite);
-  if (cooldownClock.getElapsedTime().asSeconds() < delay / 2) {
-    if (target && !target->isDead) {
-      attackSprite.setPosition(target->position);
+
+  if (type == 0) {
+    if (cooldownClock.getElapsedTime().asSeconds() < delay / 2) {
+      if (target && !target->isDead) {
+        attackSprite.setPosition(target->position);
+        window.draw(attackSprite);
+      }
+    } else
+      target = nullptr;
+  }
+
+  if (type == 1 && attacking) {
+    // Animate attackSprite for Type 1 tower
+    if (target)
+      attackTargetPosition = target->position;
+    sf::Vector2f direction = attackTargetPosition - attackSprite.getPosition();
+    float distance =
+        std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+    if (distance > 10.0f) {  // Arbitrary small distance for collision
+      direction /= distance; // Normalize
+      attackSprite.move(direction * attackSpeed); // Move attackSprite
       window.draw(attackSprite);
+    } else {
+      attacking = false; // Stop animation when it reaches the target
     }
-  } else
-    target = nullptr;
+  }
 }
 
 std::vector<std::list<Enemy>::iterator>
@@ -74,27 +100,22 @@ void Tower::attack(std::list<Enemy> &enemies) {
   if (cooldownClock.getElapsedTime().asSeconds() >= delay) {
     auto enemiesInRange = withinRange(enemies);
     if (!enemiesInRange.empty()) {
-      std::cout << "Attacking" << std::endl;
-      (*enemiesInRange.front())
-          .getHit(dmg); // Dereference iterator to modify actual enemy
-      target = &(*enemiesInRange.front());
-      cooldownClock.restart();
+      if (type != 2) {
+        std::cout << "Attacking" << std::endl;
+        (*enemiesInRange.front()).getHit(dmg); // Hit the enemy
+        target = &(*enemiesInRange.front());
+
+        if (type == 1) {
+          // For Type 1 tower, start an attack animation
+          attacking = true;
+          attackSprite.setPosition(position);
+          attackTargetPosition = target->position;
+        }
+      } else if (type == 2) {
+        for (auto &enemyIt : enemiesInRange)
+          enemyIt->slow();
+      }
     }
+    cooldownClock.restart();
   }
 }
-/*
-
-mainInfo::mainInfo(int dmg, int range, int cost)
-    : dmg(dmg), range(range), cost(cost) {}
-
-towersToSaveState::towersToSaveState(Game *game,
-                                     std::vector<Json::Value> JSONtower)
-    : game(game) {
-  for (size_t i = 0; i < JSONtower.size(); ++i) {
-    auto towerInfo = JSONtower[i];
-    int dm = towerInfo["dmg"].asInt();
-    int rang = towerInfo["range"].asInt();
-    int cos = towerInfo["cost"].asInt();
-    Alltowers[i + 1] = mainInfo(dm, rang, cos);
-  }
-}*/

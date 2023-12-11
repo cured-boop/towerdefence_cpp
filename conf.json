@@ -4,7 +4,9 @@
     "reward" : 100,
     "pledge" : 1,
     "towers": [
-      {"damage": 10, "range": 150, "cost": 10, "delay": 2}
+      {"damage": 10, "range": 150, "cost": 15, "delay": 2},
+      {"damage": 2, "range": 450, "cost": 20, "delay": 1},
+      {"damage": 15, "range": 300, "cost": 5, "delay": 4}
     ],
   
   

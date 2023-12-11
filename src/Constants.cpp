@@ -8,11 +8,11 @@ const int menuHeight = 700;
 const int tileSize = windowHeight / 7;
 const int tileSizeOffset = tileSize * 1.5;
 
-const std::vector<int> towerPrices = {15, 30, 45};
-const std::vector<int> towerRanges = {150, 300, 450};
+const std::vector<int> towerPrices = {15, 20, 5};
+const std::vector<int> towerRanges = {150, 450, 300};
 
 const std::vector<int> enemyHPs = {30, 10, 45};
-const std::vector<int> enemySpeeds = {70, 150, 40};
+const std::vector<int> enemySpeeds = {90, 300, 60};
 const std::vector<int> enemyMoneys = {5, 7, 10};
 
 void scaleSprite(sf::Sprite &sprite) {

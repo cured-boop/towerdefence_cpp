@@ -46,7 +46,7 @@ nlohmann::json SaverLoader::loadConfig() {
         std::ifstream file("conf.json");
         nlohmann::json JSON;
         file >> JSON;
-        std::cout << JSON.dump(2) << std::endl;
+        //std::cout << JSON.dump(2) << std::endl;
         return JSON;
     } catch (const std::exception& e) {
         std::cerr << "Error with configuration: " << e.what() << std::endl;

@@ -3,6 +3,8 @@
 #include "SaverLoader.hpp"
 #include <algorithm>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -20,11 +22,13 @@ json golds = config["gold"];
 // Output the levels array
 // std::cout << "Levels:" << std::endl;
 
-const std::vector<std::vector<int>> layout = levels[0];
+//const std::vector<std::vector<int>> layout = levels[0];
 
+/*
 const std::vector<sf::Vector2i> path = {
     {1, 7}, {1, 6}, {1, 5}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {5, 4},
     {5, 3}, {5, 2}, {4, 2}, {3, 2}, {3, 1}, {3, 0}, {3, -1}};
+*/
 
 Enemy enemy0 = Enemy(0);
 
@@ -32,7 +36,7 @@ Enemy enemy1 = Enemy(1);
 
 Enemy enemy2 = Enemy(2);
 
-std::vector<Wave> waves = {Wave({enemy0, enemy1, enemy2}), Wave({enemy1}),
+std::vector<Wave> waves = {Wave({enemy1, enemy0, enemy2}), Wave({enemy1}),
                            Wave({enemy1})};
 auto tower0 = towers[0];
 auto tower1 = towers[1];
@@ -46,8 +50,8 @@ Tower cat2 = Tower(tower2["damage"], tower2["range"], tower2["cost"],
 
 std::vector<Tower> purchasedTowers;
 
-Game::Game(sf::RenderWindow &win)
-    : window(win), sidebar(200, window), selectedTower(-1) {
+Game::Game(sf::RenderWindow &win): window(win), sidebar(200, window), selectedTower(-1) {
+  
 
   // Load tower textures and create sprites for each tower type
   if (textureCat0.loadFromFile("src/assets/cat0.png")) {
@@ -85,14 +89,18 @@ Game::Game(sf::RenderWindow &win)
   availableTowers.push_back(cat1);
   availableTowers.push_back(cat2);
   // TODO: Read levelnumber from save file and call load(levelnumber)
-  load(0);
+  load(levelNumber);
 }
 
 void Game::load(int levelNumber) {
-
+  std::vector<sf::Vector2i> path;
+  for (const auto& p: paths[levelNumber]) {
+    sf::Vector2i vec(p[0], p[1]);
+    path.push_back(vec);
+  }
   // TODO: Load the level from a file according to the levelNumber
-  levelNumber = levelNumber;
-  level.initialize(layout, path, waves, purchasedTowers);
+  //levelNumber = levelNumber;
+  level.initialize(levels[levelNumber], path, waves, purchasedTowers);
 
   // TODO: Read state from a save file
   int currentWave = 1;
@@ -142,8 +150,11 @@ void Game::draw() {
     window.draw(towerSprites[selectedTower]); // Draw the cursor sprite
   }
 
-  if (isLost)
+  if (isLost) {
     drawGameLossScreen();
+  }
+  if (level.getLevelWon())
+    drawGameWinScreen();
 }
 
 void Game::handleEvents(const sf::Event &event) {
@@ -162,16 +173,26 @@ void Game::handleEvents(const sf::Event &event) {
 
   if (event.type == sf::Event::MouseButtonPressed) {
     if (event.mouseButton.button == sf::Mouse::Left) {
-      if (!isLost)
-        handleMouseClick(event.mouseButton.x, event.mouseButton.y);
-      else {
+      std::cout << "getLevelWon(): " << level.getLevelWon() << std::endl;
+      if (isLost) {
         sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
-
         if (isOnButton(exitButton, mousePos)) {
           window.close();
         } else if (isOnButton(restartButton, mousePos)) {
-          load(0);
+          load(levelNumber);
         }
+      }
+      else if (level.getLevelWon() == 1) {
+        sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
+        if (isOnButton(nextButton, mousePos)) {
+          std::cout << "next" << std::endl;
+          levelNumber++;
+          load(levelNumber);
+          level.setLevelWon(false);
+        }
+      }
+      else {
+        handleMouseClick(event.mouseButton.x, event.mouseButton.y);
       }
     }
   }
@@ -248,6 +269,7 @@ void Game::drawGameLossScreen() {
   overlay.setFillColor(sf::Color(0, 0, 0, 150)); // Semi-transparent black
 
   // Create a text message
+  createWinScreenButtons();
   sf::Text message;
   message.setFont(font);
   message.setString("Game Over! You Lost!");
@@ -264,6 +286,29 @@ void Game::drawGameLossScreen() {
   window.draw(exitButtonText);
   window.draw(restartButton);
   window.draw(restartButtonText);
+}
+void Game::drawGameWinScreen() {
+  // Create a semi-transparent overlay
+  sf::RectangleShape overlay(
+      sf::Vector2f(window.getSize().x, window.getSize().y));
+  overlay.setFillColor(sf::Color(0, 0, 0, 150)); // Semi-transparent black
+
+  // Create a text message
+  createWinScreenButtons();
+  sf::Text message;
+  message.setFont(font);
+  message.setString("Level Complete!");
+  message.setCharacterSize(50); // or another appropriate size
+  message.setFillColor(sf::Color::White);
+  message.setPosition(
+      window.getSize().x / 2.f - message.getGlobalBounds().width / 2.f,
+      window.getSize().y / 2.f - message.getGlobalBounds().height / 2.f);
+
+  // Draw the overlay and message
+  window.draw(overlay);
+  window.draw(message);
+  window.draw(nextButton);
+  window.draw(nextButtonText);
 }
 
 void Game::createLossScreenButtons() {
@@ -315,8 +360,38 @@ void Game::createLossScreenButtons() {
       restartButton.getPosition().x + restartButton.getSize().x / 2.0f,
       restartButton.getPosition().y + restartButton.getSize().y / 2.0f);
 }
+void Game::createWinScreenButtons() {
+  // Assume font is already loaded
+
+  // Styling for the buttons
+  sf::Color buttonFillColor =
+      sf::Color(100, 100, 250); // Choose a pleasant color
+  sf::Color buttonOutlineColor = sf::Color::Black;
+  float buttonOutlineThickness = 2.0f;
+
+  // Next button
+  nextButton.setSize(sf::Vector2f(100, 50));
+  nextButton.setPosition(window.getSize().x / 2 - 50,
+                         window.getSize().y / 2 + 100);
+  nextButton.setFillColor(buttonFillColor);
+  nextButton.setOutlineColor(buttonOutlineColor);
+  nextButton.setOutlineThickness(buttonOutlineThickness);
+
+  nextButtonText.setFont(font);
+  nextButtonText.setString("Next");
+  nextButtonText.setCharacterSize(20);
+  nextButtonText.setFillColor(sf::Color::White);
+  // Center the text in the button
+  sf::FloatRect textRect = nextButtonText.getLocalBounds();
+  nextButtonText.setOrigin(textRect.left + textRect.width / 2.0f,
+                           textRect.top + textRect.height / 2.0f);
+  nextButtonText.setPosition(
+      nextButton.getPosition().x + nextButton.getSize().x / 2.0f,
+      nextButton.getPosition().y + nextButton.getSize().y / 2.0f);
+}
 
 bool Game::isOnButton(const sf::RectangleShape &button,
                       const sf::Vector2f &mousePos) {
   return button.getGlobalBounds().contains(mousePos);
 }
+

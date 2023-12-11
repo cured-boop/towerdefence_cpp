@@ -13,7 +13,7 @@ public:
   void draw();
   void handleMouseClick(int x, int y);
   bool isValidPosition(int x, int y);
-
+  State state;
 private:
   sf::RenderWindow &window;
   void load(int level);
@@ -21,6 +21,7 @@ private:
   void updateEnemies(float deltaTime);
   void updateTowers();
   void drawGameLossScreen();
+  void drawGameWinScreen();
   sf::Clock gameClock;
   sf::Texture cursorTexture;
   sf::Sprite cursorSprite;
@@ -29,10 +30,9 @@ private:
   Sidebar sidebar;
   int selectedTower;
   std::vector<Tower> availableTowers;
-  State state;
   Level level;
   bool isLost;
-  int levelNum;
+  int levelNumber = 0;
 
   // Tower Sprites:
   sf::Texture textureCat0, textureCat1, textureCat2;
@@ -43,11 +43,14 @@ private:
   //
   // For game loss screen:
   sf::RectangleShape exitButton;
+  sf::RectangleShape nextButton;
   sf::RectangleShape restartButton;
   sf::Text exitButtonText;
+  sf::Text nextButtonText;
   sf::Text restartButtonText;
 
   void createLossScreenButtons();
+  void createWinScreenButtons();
   bool isOnButton(const sf::RectangleShape &button,
                   const sf::Vector2f &mousePos);
 };

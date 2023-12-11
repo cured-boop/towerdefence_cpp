@@ -35,7 +35,13 @@ public:
 
   bool isEmpty(sf::Vector2i tile);
 
+  bool getLevelWon();
+
+  void setLevelWon(bool state);
+
   void update(State &state);
+
+  State state;
 
 private:
   // Matrix representation of the level, where 0 = grass, 1 = road, 2 = start,
@@ -59,7 +65,8 @@ private:
   const int tileSize = 100; // The size of each road/grass tile on screen
   std::vector<Wave> waves;
   int levelNum;
-
+  bool levelWon = false;
+  
   sf::Clock spawnClock;
 };
 

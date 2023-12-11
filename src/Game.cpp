@@ -16,6 +16,7 @@ json config = gameState.loadConfig();
 json levels = config["levels"];
 json paths = config["paths"];
 json towers = config["towers"];
+json golds = config["gold"];
 // Output the levels array
 // std::cout << "Levels:" << std::endl;
 
@@ -95,7 +96,7 @@ void Game::load(int levelNumber) {
 
   // TODO: Read state from a save file
   int currentWave = 1;
-  int gold = 300;
+  int gold = golds;
   int totalWaves = level.getWaves().size();
   state.initialize(currentWave, gold, totalWaves);
 

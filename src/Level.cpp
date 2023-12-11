@@ -97,18 +97,33 @@ bool Level::isEmpty(sf::Vector2i tile) {
 
   return true;
 }
+bool Level::getLevelWon() {
+  return levelWon;
+}
+
+void Level::setLevelWon(bool state) {
+  levelWon = state;
+}
 
 void Level::spawnNextWave() {
-  if (waves.empty())
+  if (waves.empty()) {
     return;
+  }
+
   // Erase the current empty wave from the wave vector
   std::cout << "Erasing empty wave" << std::endl;
   waves.erase(waves.begin()); // Remove the wave if all enemies are spawned
 }
 
 void Level::update(State &state) {
-  if (waves.empty()) // Do not spawn if all waves have been spawned
+  if (waves.empty() && state.isFinished()) {
+    setLevelWon(true);
     return;
+  }
+  else if (waves.empty()) {
+    return;
+  }
+
 
   if (waves.front().getEnemies().empty() && enemies.empty()) {
     state.nextWave();

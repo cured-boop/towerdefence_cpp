@@ -15,8 +15,9 @@ This directory is intended for all external libraries that your project depends 
 #### How to Add Libraries Automatically
 
 1. **Open terminal in the root directory (tower-defence-tran-duong-6)**
-2. **Run ```bash'./setup.sh''' (This will install all the needed dependencies automatically)**
+2. **Run setup.sh (This will install all the needed dependencies automatically)**
     -*(If you lack permission to run it, execute this first: chmod +x setup.sh)*
+    ```bash ./setup.sh'''
 3. **Run 'make' (This will compile the project)**
 4. **Run './main' (This will run the program)**
 

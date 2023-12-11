@@ -4,13 +4,15 @@
 #include <cmath>
 #include <iostream>
 
-Tower::Tower(int _dmg, int _range, int _cost, int _delay)
-    : dmg(_dmg), range(_range), cost(_cost), delay(_delay) {
+Tower::Tower(int _dmg, int _range, int _cost, int _delay, int _type)
+    : dmg(_dmg), range(_range), cost(_cost), delay(_delay), type(_type) {
 
   // Load textures
-  if (!towerTexture.loadFromFile("src/assets/cat0.png")) {
-    // Handle error
+  std::string texturePath = "src/assets/cat" + std::to_string(_type) + ".png";
+  if (!towerTexture.loadFromFile(texturePath)) {
+    // Handle error (e.g., texture file not found)
   }
+
   if (!attackTexture.loadFromFile("src/assets/claw.png")) {
     // Handle error
   }
@@ -82,19 +84,3 @@ void Tower::attack(std::list<Enemy> &enemies) {
     }
   }
 }
-/*
-
-mainInfo::mainInfo(int dmg, int range, int cost)
-    : dmg(dmg), range(range), cost(cost) {}
-
-towersToSaveState::towersToSaveState(Game *game,
-                                     std::vector<Json::Value> JSONtower)
-    : game(game) {
-  for (size_t i = 0; i < JSONtower.size(); ++i) {
-    auto towerInfo = JSONtower[i];
-    int dm = towerInfo["dmg"].asInt();
-    int rang = towerInfo["range"].asInt();
-    int cos = towerInfo["cost"].asInt();
-    Alltowers[i + 1] = mainInfo(dm, rang, cos);
-  }
-}*/

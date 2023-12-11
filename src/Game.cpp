@@ -8,7 +8,7 @@ using json = nlohmann::json;
 
 // Define game state
 SaverLoader gameState = SaverLoader();
-  
+
 // Call the loadConfig function to load the configuration into a JSON object
 json config = gameState.loadConfig();
 
@@ -17,7 +17,7 @@ json levels = config["levels"];
 json paths = config["paths"];
 json towers = config["towers"];
 // Output the levels array
-//std::cout << "Levels:" << std::endl;
+// std::cout << "Levels:" << std::endl;
 
 const std::vector<std::vector<int>> layout = levels[0];
 
@@ -31,11 +31,17 @@ Enemy enemy1 = Enemy(1);
 
 Enemy enemy2 = Enemy(2);
 
-
 std::vector<Wave> waves = {Wave({enemy0, enemy1, enemy2}), Wave({enemy1}),
                            Wave({enemy1})};
-auto tower1 = towers[0];
-Tower tower = Tower(tower1["damage"], tower1["range"], tower1["cost"], tower1["delay"]);
+auto tower0 = towers[0];
+auto tower1 = towers[1];
+auto tower2 = towers[2];
+Tower cat0 = Tower(tower0["damage"], tower0["range"], tower0["cost"],
+                   tower0["delay"], 0);
+Tower cat1 = Tower(tower1["damage"], tower1["range"], tower1["cost"],
+                   tower1["delay"], 0);
+Tower cat2 = Tower(tower2["damage"], tower2["range"], tower2["cost"],
+                   tower2["delay"], 0);
 
 std::vector<Tower> purchasedTowers;
 
@@ -49,7 +55,9 @@ Game::Game(sf::RenderWindow &win) : window(win), sidebar(200, window) {
   createLossScreenButtons();
 
   // TODO: Read tower data from file and push to the vector:
-  availableTowers.push_back(tower);
+  availableTowers.push_back(cat0);
+  availableTowers.push_back(cat1);
+  availableTowers.push_back(cat2);
   // TODO: Read levelnumber from save file and call load(levelnumber)
   load(0);
 }

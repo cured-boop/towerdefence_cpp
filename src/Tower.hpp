@@ -11,9 +11,10 @@ public:
   int range;
   int cost;
   int delay;
+  int type;
   sf::Vector2f position;
 
-  Tower(int dmg, int range, int cost, int delay);
+  Tower(int dmg, int range, int cost, int delay, int type);
 
   std::vector<std::list<Enemy>::iterator>
   withinRange(std::list<Enemy> &enemies);

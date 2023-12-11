@@ -8,8 +8,8 @@ const int menuHeight = 700;
 const int tileSize = windowHeight / 7;
 const int tileSizeOffset = tileSize * 1.5;
 
-const std::vector<int> towerPrices = {15, 30, 45};
-const std::vector<int> towerRanges = {150, 300, 450};
+const std::vector<int> towerPrices = {15, 4, 20};
+const std::vector<int> towerRanges = {150, 230, 300};
 
 const std::vector<int> enemyHPs = {30, 10, 45};
 const std::vector<int> enemySpeeds = {70, 150, 40};

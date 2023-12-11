@@ -13,12 +13,24 @@ Sidebar::Sidebar(float width, const sf::RenderWindow &window)
   // Load tower textures and create sprites for each tower type
   if (textureCat0.loadFromFile("src/assets/cat0.png")) {
     spriteCat0.setTexture(textureCat0);
-    spriteCat0.setPosition(
-        windowWidth - width / 2,
-        tileSize * (1 + 0 * 2)); // Adjust vertical position for each tower
+    spriteCat0.setPosition(windowWidth - width / 2, tileSize * (1 + 0 * 2));
     scaleSprite(spriteCat0);
-    centerSprite(sprite);
-    towerSprites.push_back(sprite);
+    centerSprite(spriteCat0);
+    towerSprites.push_back(spriteCat0);
+  }
+  if (textureCat1.loadFromFile("src/assets/cat1.png")) {
+    spriteCat1.setTexture(textureCat1);
+    spriteCat1.setPosition(windowWidth - width / 2, tileSize * (1 + 1 * 2));
+    scaleSprite(spriteCat1);
+    centerSprite(spriteCat1);
+    towerSprites.push_back(spriteCat1);
+  }
+  if (textureCat2.loadFromFile("src/assets/cat2.png")) {
+    spriteCat2.setTexture(textureCat2);
+    spriteCat2.setPosition(windowWidth - width / 2, tileSize * (1 + 2 * 2));
+    scaleSprite(spriteCat2);
+    centerSprite(spriteCat2);
+    towerSprites.push_back(spriteCat2);
   }
 
   // Load font for prices

@@ -39,17 +39,42 @@ auto tower2 = towers[2];
 Tower cat0 = Tower(tower0["damage"], tower0["range"], tower0["cost"],
                    tower0["delay"], 0);
 Tower cat1 = Tower(tower1["damage"], tower1["range"], tower1["cost"],
-                   tower1["delay"], 0);
+                   tower1["delay"], 1);
 Tower cat2 = Tower(tower2["damage"], tower2["range"], tower2["cost"],
-                   tower2["delay"], 0);
+                   tower2["delay"], 2);
 
 std::vector<Tower> purchasedTowers;
 
-Game::Game(sf::RenderWindow &win) : window(win), sidebar(200, window) {
+Game::Game(sf::RenderWindow &win)
+    : window(win), sidebar(200, window), selectedTower(-1) {
+
+  // Load tower textures and create sprites for each tower type
+  if (textureCat0.loadFromFile("src/assets/cat0.png")) {
+    std::cout << "cat0 loaded" << std::endl;
+    spriteCat0.setTexture(textureCat0);
+    scaleSprite(spriteCat0);
+    centerSprite(spriteCat0);
+    towerSprites.push_back(spriteCat0);
+  }
+  if (textureCat1.loadFromFile("src/assets/cat1.png")) {
+    std::cout << "cat1 loaded" << std::endl;
+    spriteCat1.setTexture(textureCat1);
+    scaleSprite(spriteCat1);
+    centerSprite(spriteCat1);
+    towerSprites.push_back(spriteCat1);
+  }
+  if (textureCat2.loadFromFile("src/assets/cat2.png")) {
+    std::cout << "cat2 loaded" << std::endl;
+    spriteCat2.setTexture(textureCat2);
+    scaleSprite(spriteCat2);
+    centerSprite(spriteCat2);
+    towerSprites.push_back(spriteCat2);
+  }
 
   // Initialize GUI elements:
   // Load font
   if (!font.loadFromFile("src/assets/bubblegum.ttf")) {
+    std::cout << "font loaded" << std::endl;
     // Handle error
   }
   createLossScreenButtons();
@@ -70,7 +95,7 @@ void Game::load(int levelNumber) {
 
   // TODO: Read state from a save file
   int currentWave = 1;
-  int gold = 30;
+  int gold = 300;
   int totalWaves = level.getWaves().size();
   state.initialize(currentWave, gold, totalWaves);
 
@@ -78,7 +103,6 @@ void Game::load(int levelNumber) {
 }
 
 void Game::update() {
-
   sf::Event event;
   while (window.pollEvent(event)) {
     handleEvents(event); // Pass each event to the handler
@@ -113,8 +137,8 @@ void Game::draw() {
   state.draw(window);
 
   if (selectedTower >= 0) {
-    window.draw(rangeIndicator); // Draw the range indicator
-    window.draw(cursorSprite);   // Draw the cursor sprite
+    window.draw(rangeIndicator);              // Draw the range indicator
+    window.draw(towerSprites[selectedTower]); // Draw the cursor sprite
   }
 
   if (isLost)
@@ -131,7 +155,7 @@ void Game::handleEvents(const sf::Event &event) {
   if (selectedTower >= 0) {
     sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
     sf::Vector2f position = sf::Vector2f(mousePosition.x, mousePosition.y);
-    cursorSprite.setPosition(position);
+    towerSprites[selectedTower].setPosition(position);
     rangeIndicator.setPosition(position); // Update range indicator position
   }
 
@@ -181,15 +205,7 @@ void Game::handleMouseClick(int x, int y) {
     // Handle sidebar interaction
     selectedTower = sidebar.selectTower(state.money(), sf::Vector2f(x, y));
     if (selectedTower >= 0) {
-      std::string texturePath =
-          "src/assets/cat" + std::to_string(selectedTower) + ".png";
-      if (!cursorTexture.loadFromFile(texturePath)) {
-        // Handle error (e.g., texture file not found)
-      }
-      cursorSprite.setTexture(cursorTexture);
-      scaleSprite(cursorSprite); // Scale it to the correct size
-      centerSprite(cursorSprite);
-      cursorSprite.setPosition(x, y);
+      towerSprites[selectedTower].setPosition(x, y);
 
       // Initialize the range indicator
       rangeIndicator.setRadius(towerRanges[selectedTower]);

@@ -32,6 +32,9 @@ private:
   sf::Sprite towerSprite;
   sf::Sprite attackSprite;
   Enemy *target;
+  bool attacking = false; // Indicates if the tower is currently attacking
+  sf::Vector2f attackTargetPosition; // Target position for attack animation
+  float attackSpeed = 2.0f;          // Speed of attack animation
 };
 /*
 class mainInfo {

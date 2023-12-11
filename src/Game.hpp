@@ -34,6 +34,11 @@ private:
   bool isLost;
   int levelNum;
 
+  // Tower Sprites:
+  sf::Texture textureCat0, textureCat1, textureCat2;
+  sf::Sprite spriteCat0, spriteCat1, spriteCat2;
+  std::vector<sf::Sprite> towerSprites;
+
   //
   //
   // For game loss screen:

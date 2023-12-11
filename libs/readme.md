@@ -2,7 +2,8 @@
 
 #### LIBS Directory
 
-*TODO: Make sure includes refer to this directory and move libs here.*
+##### **In this directory, you are required to place all the external libraries** <-- says description
+**TODO: Make sure includes refer to this directory and move libs here. Should setup.sh be modified to install to here?**
 
 This directory is intended for all external libraries that your project depends on.
 
@@ -11,8 +12,16 @@ This directory is intended for all external libraries that your project depends 
 - **SFML (Simple and Fast Multimedia Library):** Used for windowing, graphics, GUI, etc.
 - **JSON for Modern C++ (nlohmann/json):** Used for JSON parsing and serialization.
 
+#### How to Add Libraries Automatically
 
-#### How to Add Libraries
+1. **Open terminal in the root directory (tower-defence-tran-duong-6)**
+2. **Run './setup.sh' (This will install all the needed dependencies automatically)**
+    -*(If you lack permission to run it, execute this first: chmod +x setup.sh)*
+3. **Run 'make' (This will compile the project)**
+4. **Run './main' (This will run the program)**
+
+
+#### How to Add Libraries Manually
 
 1. **SFML:**
    - **Option 1: Git Submodule**:

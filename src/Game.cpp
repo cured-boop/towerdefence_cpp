@@ -18,7 +18,7 @@ json config = gameState.loadConfig();
 json levels = config["levels"];
 json paths = config["paths"];
 json towers = config["towers"];
-json golds = config["gold"];
+json gold = config["gold"];
 // Output the levels array
 // std::cout << "Levels:" << std::endl;
 
@@ -36,8 +36,13 @@ Enemy enemy1 = Enemy(1);
 
 Enemy enemy2 = Enemy(2);
 
-std::vector<Wave> waves = {Wave({enemy1, enemy0, enemy2}), Wave({enemy1}),
-                           Wave({enemy1})};
+std::vector<std::vector<Wave>> waves = {
+{Wave({enemy0, enemy1, enemy2}), Wave({enemy1, enemy1}), Wave({enemy2, enemy2, enemy2})},
+{Wave({enemy0, enemy1, enemy2}), Wave({enemy1, enemy1}), Wave({enemy2, enemy2, enemy2})},
+{Wave({enemy0, enemy1, enemy2}), Wave({enemy1, enemy1}), Wave({enemy2, enemy2, enemy2})},
+{Wave({enemy0, enemy1, enemy2}), Wave({enemy1, enemy1}), Wave({enemy0, enemy2, enemy2, enemy1}), Wave({enemy2, enemy2, enemy2, enemy2})},
+{Wave({enemy0}), Wave({enemy1, enemy0, enemy0}), Wave({enemy1, enemy1}), Wave({enemy2, enemy2, enemy2}), Wave({enemy2, enemy2, enemy2, enemy2, enemy2})}
+};
 auto tower0 = towers[0];
 auto tower1 = towers[1];
 auto tower2 = towers[2];
@@ -98,13 +103,8 @@ void Game::load(int levelNumber) {
     sf::Vector2i vec(p[0], p[1]);
     path.push_back(vec);
   }
-  // TODO: Load the level from a file according to the levelNumber
-  //levelNumber = levelNumber;
-  level.initialize(levels[levelNumber], path, waves, purchasedTowers);
-
-  // TODO: Read state from a save file
+  level.initialize(levels[levelNumber], path, waves[levelNumber], purchasedTowers);
   int currentWave = 1;
-  int gold = golds;
   int totalWaves = level.getWaves().size();
   state.initialize(currentWave, gold, totalWaves);
 
